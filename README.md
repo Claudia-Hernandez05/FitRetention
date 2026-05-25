@@ -4,6 +4,12 @@
 
 The goal of the project is to help a fitness center identify members who are likely to cancel their membership and recommend retention actions before churn happens.
 
+The deployed application is available here:
+
+```text
+https://fitretention-gym-churn.streamlit.app
+```
+
 ---
 
 ## Project Overview
@@ -21,6 +27,7 @@ The project includes:
 - CI/CD with GitHub Actions
 - Docker containerization
 - Docker Compose configuration
+- Cloud deployment with Streamlit Community Cloud
 - Terraform infrastructure-as-code preparation
 
 ---
@@ -168,6 +175,20 @@ FitRetention/
 
 ---
 
+## Cloud Deployment
+
+The application is deployed using **Streamlit Community Cloud** and is publicly accessible at:
+
+```text
+https://fitretention-gym-churn.streamlit.app
+```
+
+This deployment allows users to access the Machine Learning application directly from a browser without running it locally.
+
+The cloud deployment is connected to the GitHub repository, so the application can be updated from the `main` branch.
+
+---
+
 ## How to Run Locally
 
 ### 1. Install dependencies
@@ -307,7 +328,8 @@ The project demonstrates the following MLOps lifecycle:
 9. Automated testing
 10. CI/CD automation
 11. Docker containerization
-12. Infrastructure-as-code preparation
+12. Cloud deployment
+13. Infrastructure-as-code preparation
 
 ---
 
@@ -324,17 +346,18 @@ Completed:
 - GitHub Actions CI pipeline
 - Dockerfile
 - Docker Compose
+- Cloud deployment
 - Terraform placeholder
 - GitHub repository documentation
 
 Pending / Future improvements:
 
-- Cloud deployment
 - Authentication
 - Real production dataset
 - Advanced monitoring
 - Model drift detection
 - Scheduled retraining
+- Full production deployment with Azure resources
 
 ---
 
