@@ -41,7 +41,8 @@ st.markdown(
     }
 
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+        background: linear-gradient(180deg, #111827 0%, #1F2937 100%);
+        border-right: 1px solid rgba(255,255,255,0.06);
     }
 
     [data-testid="stSidebar"] * {
@@ -50,13 +51,15 @@ st.markdown(
 
     h1 {
         font-size: 3rem !important;
-        font-weight: 800 !important;
+        font-weight: 850 !important;
         color: #F9FAFB !important;
+        letter-spacing: -0.04em;
     }
 
     h2, h3 {
         color: #F9FAFB !important;
-        font-weight: 700 !important;
+        font-weight: 750 !important;
+        letter-spacing: -0.025em;
     }
 
     p, li, label, div {
@@ -64,84 +67,91 @@ st.markdown(
     }
 
     .hero-card {
-        padding: 2rem;
-        border-radius: 24px;
-        background: linear-gradient(135deg, #1F2937 0%, #111827 45%, #064E3B 100%);
+        padding: 2.2rem;
+        border-radius: 28px;
+        background:
+            radial-gradient(circle at top left, rgba(16,185,129,0.22), transparent 35%),
+            linear-gradient(135deg, #1F2937 0%, #111827 45%, #064E3B 100%);
         border: 1px solid rgba(255,255,255,0.08);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        box-shadow: 0 24px 55px rgba(0,0,0,0.28);
         margin-bottom: 1.5rem;
     }
 
     .hero-title {
-        font-size: 3.2rem;
+        font-size: 3.3rem;
         font-weight: 900;
         color: white;
         margin-bottom: 0.3rem;
+        letter-spacing: -0.05em;
     }
 
     .hero-subtitle {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
         color: #D1FAE5;
         margin-bottom: 1.2rem;
     }
 
     .card {
-        padding: 1.4rem;
-        border-radius: 18px;
+        padding: 1.45rem;
+        border-radius: 20px;
         background-color: #111827;
         border: 1px solid rgba(255,255,255,0.08);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.20);
         margin-bottom: 1rem;
     }
 
     .metric-card {
-        padding: 1.2rem;
-        border-radius: 18px;
-        background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+        padding: 1.25rem;
+        border-radius: 20px;
+        background:
+            radial-gradient(circle at top right, rgba(110,231,183,0.18), transparent 38%),
+            linear-gradient(135deg, #064E3B 0%, #065F46 100%);
         border: 1px solid rgba(255,255,255,0.08);
         text-align: center;
+        margin-bottom: 1rem;
+        box-shadow: 0 12px 28px rgba(0,0,0,0.18);
     }
 
     .metric-title {
         font-size: 0.95rem;
         color: #D1FAE5;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.35rem;
     }
 
     .metric-value {
-        font-size: 1.6rem;
-        font-weight: 800;
+        font-size: 1.65rem;
+        font-weight: 850;
         color: white;
     }
 
     .badge {
         display: inline-block;
         padding: 0.45rem 0.8rem;
-        margin: 0.2rem;
+        margin: 0.22rem;
         border-radius: 999px;
-        background-color: rgba(16,185,129,0.15);
+        background-color: rgba(16,185,129,0.13);
         color: #6EE7B7;
-        border: 1px solid rgba(110,231,183,0.3);
-        font-weight: 600;
+        border: 1px solid rgba(110,231,183,0.30);
+        font-weight: 650;
     }
 
     .warning-card {
-        padding: 1rem;
-        border-radius: 16px;
+        padding: 1.15rem;
+        border-radius: 18px;
         background-color: rgba(245,158,11,0.12);
         border: 1px solid rgba(245,158,11,0.35);
     }
 
     .success-card {
-        padding: 1rem;
-        border-radius: 16px;
+        padding: 1.15rem;
+        border-radius: 18px;
         background-color: rgba(16,185,129,0.12);
         border: 1px solid rgba(16,185,129,0.35);
     }
 
     .danger-card {
-        padding: 1rem;
-        border-radius: 16px;
+        padding: 1.15rem;
+        border-radius: 18px;
         background-color: rgba(239,68,68,0.12);
         border: 1px solid rgba(239,68,68,0.35);
     }
@@ -151,17 +161,19 @@ st.markdown(
         padding: 1rem;
         border-radius: 16px;
         border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.14);
     }
 
     div[data-testid="stDataFrame"] {
         border-radius: 16px;
         overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.06);
     }
 
     .stButton > button {
         border-radius: 999px;
         padding: 0.7rem 1.4rem;
-        font-weight: 700;
+        font-weight: 750;
         background: linear-gradient(90deg, #10B981 0%, #059669 100%);
         color: white;
         border: none;
@@ -170,6 +182,45 @@ st.markdown(
     .stButton > button:hover {
         background: linear-gradient(90deg, #059669 0%, #047857 100%);
         color: white;
+    }
+
+    [data-testid="stSidebar"] .stButton > button {
+        background-color: transparent;
+        color: #E5E7EB;
+        border: none;
+        text-align: left;
+        justify-content: flex-start;
+        padding: 0.68rem 0.9rem;
+        border-radius: 13px;
+        font-weight: 650;
+        width: 100%;
+        box-shadow: none;
+    }
+
+    [data-testid="stSidebar"] .stButton > button:hover {
+        background-color: rgba(16,185,129,0.16);
+        color: #6EE7B7;
+    }
+
+    [data-testid="stSidebar"] .stButton > button:focus {
+        background-color: rgba(16,185,129,0.22);
+        color: #6EE7B7;
+        border: none;
+        box-shadow: none;
+    }
+
+    .nav-active {
+        padding: 0.65rem 0.9rem;
+        border-radius: 13px;
+        background-color: rgba(16,185,129,0.22);
+        color: #6EE7B7;
+        font-weight: 750;
+        margin-bottom: 0.25rem;
+    }
+
+    .small-muted {
+        color: #9CA3AF;
+        font-size: 0.98rem;
     }
     </style>
     """,
@@ -186,7 +237,10 @@ def load_dataset():
 def section_header(title, subtitle=None):
     st.markdown(f"## {title}")
     if subtitle:
-        st.markdown(f"<p style='color:#9CA3AF; font-size:1.05rem;'>{subtitle}</p>", unsafe_allow_html=True)
+        st.markdown(
+            f"<p class='small-muted'>{subtitle}</p>",
+            unsafe_allow_html=True,
+        )
 
 
 def custom_metric(title, value):
@@ -215,21 +269,146 @@ def render_badges():
     )
 
 
+def style_axis(ax, title=None, xlabel=None, ylabel=None):
+    ax.set_facecolor("#111827")
+
+    if title:
+        ax.set_title(
+            title,
+            color="#F9FAFB",
+            fontsize=14,
+            fontweight="bold",
+            pad=14,
+        )
+    if xlabel:
+        ax.set_xlabel(xlabel, color="#D1D5DB", labelpad=10)
+    if ylabel:
+        ax.set_ylabel(ylabel, color="#D1D5DB", labelpad=10)
+
+    ax.tick_params(colors="#D1D5DB", labelsize=10)
+
+    for spine in ax.spines.values():
+        spine.set_color("#374151")
+
+    ax.grid(
+        axis="y",
+        color="#374151",
+        linestyle="--",
+        linewidth=0.6,
+        alpha=0.45,
+    )
+
+
+def create_bar_chart(labels, values, title, ylabel):
+    fig, ax = plt.subplots(figsize=(7, 4))
+    fig.patch.set_facecolor("#0E1117")
+    ax.set_facecolor("#111827")
+
+    bars = ax.bar(
+        labels,
+        values,
+        color="#10B981",
+        edgecolor="#6EE7B7",
+        linewidth=1.1,
+    )
+
+    style_axis(ax, title=title, ylabel=ylabel)
+
+    max_value = max(values) if len(values) > 0 else 1
+
+    for bar in bars:
+        height = bar.get_height()
+        label = f"{height:.3f}" if isinstance(height, float) and height < 1 else f"{height:.2f}"
+        if height >= 1:
+            label = f"{int(height)}" if float(height).is_integer() else f"{height:.2f}"
+
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            height + max_value * 0.02,
+            label,
+            ha="center",
+            va="bottom",
+            color="#F9FAFB",
+            fontsize=10,
+            fontweight="bold",
+        )
+
+    ax.set_ylim(0, max_value * 1.18 if max_value > 0 else 1)
+    fig.tight_layout()
+    return fig
+
+
+def create_horizontal_bar_chart(labels, values, title, xlabel):
+    fig, ax = plt.subplots(figsize=(8, 4.6))
+    fig.patch.set_facecolor("#0E1117")
+    ax.set_facecolor("#111827")
+
+    bars = ax.barh(
+        labels,
+        values,
+        color="#10B981",
+        edgecolor="#6EE7B7",
+        linewidth=1.1,
+    )
+
+    style_axis(ax, title=title, xlabel=xlabel)
+    ax.invert_yaxis()
+
+    max_value = max(values) if len(values) > 0 else 1
+
+    for bar in bars:
+        width = bar.get_width()
+        ax.text(
+            width + max_value * 0.02,
+            bar.get_y() + bar.get_height() / 2,
+            f"{width:.3f}",
+            va="center",
+            ha="left",
+            color="#F9FAFB",
+            fontsize=9,
+            fontweight="bold",
+        )
+
+    ax.set_xlim(0, max_value * 1.20 if max_value > 0 else 1)
+    fig.tight_layout()
+    return fig
+
+
 st.sidebar.markdown("## 🏋️ FitRetention")
 st.sidebar.caption("Gym churn prediction with MLOps")
 st.sidebar.divider()
 
-page = st.sidebar.radio(
-    "Navigation",
-    [
-        "Home",
-        "Prediction",
-        "Data Insights",
-        "Model Performance",
-        "Prediction Monitoring",
-        "MLOps Pipeline",
-    ],
-)
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
+
+def set_page(page_name):
+    st.session_state.page = page_name
+
+
+st.sidebar.markdown("### Navigation")
+
+nav_items = [
+    "Home",
+    "Prediction",
+    "Data Insights",
+    "Model Performance",
+    "Prediction Monitoring",
+    "MLOps Pipeline",
+]
+
+for item in nav_items:
+    if st.session_state.page == item:
+        st.sidebar.markdown(
+            f"<div class='nav-active'>{item}</div>",
+            unsafe_allow_html=True,
+        )
+    else:
+        if st.sidebar.button(item, key=f"nav_{item}", use_container_width=True):
+            set_page(item)
+            st.rerun()
+
+page = st.session_state.page
 
 st.sidebar.divider()
 st.sidebar.markdown("### Project Stack")
@@ -278,9 +457,9 @@ if page == "Home":
             <div class="card">
                 <h3>Why churn prediction matters</h3>
                 <p>
-                    Gym members often leave because of low attendance, low satisfaction, lack of engagement,
-                    high monthly fees or lack of personalized support. By predicting churn risk, the business
-                    can contact members before they cancel.
+                    Gym members often leave because of low attendance, low satisfaction,
+                    lack of engagement, high monthly fees or lack of personalized support.
+                    By predicting churn risk, the business can contact members before they cancel.
                 </p>
                 <p>
                     The goal is not only to predict risk, but also to recommend actions that improve retention.
@@ -359,7 +538,10 @@ elif page == "Prediction":
         with col3:
             personal_trainer = st.selectbox("Personal trainer", ["Yes", "No"])
             group_classes = st.selectbox("Group classes", ["Yes", "No"])
-            membership_type = st.selectbox("Membership type", ["Basic", "Standard", "Premium"])
+            membership_type = st.selectbox(
+                "Membership type",
+                ["Basic", "Standard", "Premium"],
+            )
 
         submitted = st.form_submit_button("Predict churn risk")
 
@@ -453,21 +635,25 @@ elif page == "Data Insights":
             st.markdown("### Churn distribution")
             churn_counts = df["churn"].value_counts().sort_index()
 
-            fig, ax = plt.subplots()
-            ax.bar(["No churn", "Churn"], churn_counts.values)
-            ax.set_ylabel("Number of members")
-            ax.set_title("Churn distribution")
-            st.pyplot(fig)
+            fig = create_bar_chart(
+                ["No churn", "Churn"],
+                churn_counts.values,
+                "Churn distribution",
+                "Number of members",
+            )
+            st.pyplot(fig, transparent=True)
 
         with col2:
             st.markdown("### Average satisfaction by churn")
             satisfaction = df.groupby("churn")["satisfaction_score"].mean()
 
-            fig, ax = plt.subplots()
-            ax.bar(["No churn", "Churn"], satisfaction.values)
-            ax.set_ylabel("Average satisfaction")
-            ax.set_title("Satisfaction comparison")
-            st.pyplot(fig)
+            fig = create_bar_chart(
+                ["No churn", "Churn"],
+                satisfaction.values,
+                "Average satisfaction by churn",
+                "Average satisfaction",
+            )
+            st.pyplot(fig, transparent=True)
 
         st.markdown("### Average behavior by churn status")
 
@@ -520,25 +706,27 @@ elif page == "Model Performance":
             st.markdown("### Model comparison")
             st.dataframe(comparison_df, use_container_width=True)
 
-            fig, ax = plt.subplots()
-            ax.bar(comparison_df["model_name"], comparison_df["f1_score"])
-            ax.set_ylabel("F1-score")
-            ax.set_title("Model comparison by F1-score")
-            ax.tick_params(axis="x", rotation=20)
-            st.pyplot(fig)
+            fig = create_bar_chart(
+                comparison_df["model_name"],
+                comparison_df["f1_score"],
+                "Model comparison by F1-score",
+                "F1-score",
+            )
+            st.pyplot(fig, transparent=True)
 
         if FEATURE_IMPORTANCE_PATH.exists():
             importance_df = pd.read_csv(FEATURE_IMPORTANCE_PATH)
 
             st.markdown("### Feature importance")
-
-            fig, ax = plt.subplots()
             top_features = importance_df.head(10)
-            ax.barh(top_features["feature"], top_features["importance"])
-            ax.set_xlabel("Importance")
-            ax.set_title("Top 10 most important features")
-            ax.invert_yaxis()
-            st.pyplot(fig)
+
+            fig = create_horizontal_bar_chart(
+                top_features["feature"],
+                top_features["importance"],
+                "Top 10 most important features",
+                "Importance",
+            )
+            st.pyplot(fig, transparent=True)
         else:
             st.info("Feature importance is available when the selected model supports it.")
 
@@ -559,14 +747,15 @@ elif page == "Prediction Monitoring":
 
         if "risk_level" in logs.columns:
             st.markdown("### Risk level distribution")
-
             risk_counts = logs["risk_level"].value_counts()
 
-            fig, ax = plt.subplots()
-            ax.bar(risk_counts.index, risk_counts.values)
-            ax.set_ylabel("Number of predictions")
-            ax.set_title("Logged risk levels")
-            st.pyplot(fig)
+            fig = create_bar_chart(
+                risk_counts.index,
+                risk_counts.values,
+                "Logged risk levels",
+                "Number of predictions",
+            )
+            st.pyplot(fig, transparent=True)
     else:
         st.info("No predictions have been logged yet. Go to the Prediction page and make a prediction.")
 
@@ -596,4 +785,6 @@ elif page == "MLOps Pipeline":
         unsafe_allow_html=True,
     )
 
-    st.success("The application is ready for local execution, Docker execution and future cloud deployment.")
+    st.success(
+        "The application is ready for local execution, Docker execution and future cloud deployment."
+    )
