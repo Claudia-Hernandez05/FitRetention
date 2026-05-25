@@ -180,7 +180,43 @@ This approach makes the project more reproducible and allows future improvements
 
 ## 8. MLOps Workflow
 
-The project follows an end-to-end MLOps workflow:
+The project follows an end-to-end MLOps workflow.
+
+### System Architecture Diagram
+
+```mermaid
+flowchart TD
+    A[Gym Member Data] --> B[Data Generation]
+    B --> C[Data Preprocessing]
+    C --> D[Model Training]
+    D --> E[Model Comparison]
+    E --> F[Best Model Selection]
+    F --> G[Model Persistence with Joblib]
+    G --> H[Streamlit Web Application]
+    H --> I[Prediction Logging]
+    I --> J[Basic Monitoring]
+
+    K[GitHub Repository] --> L[GitHub Actions CI/CD]
+    L --> M[Install Dependencies]
+    M --> N[Train Model]
+    N --> O[Run Pytest Tests]
+
+    H --> P[Docker Container]
+    P --> Q[Local Container Execution]
+
+    H --> R[Streamlit Community Cloud]
+    R --> S[Public Web App]
+
+    T[Terraform] --> U[Infrastructure as Code Preparation]
+```
+
+### Architecture Explanation
+
+The project starts with synthetic gym member data generation and preprocessing. Multiple Machine Learning models are trained and compared, and the best model is selected based on the F1-score. The selected model is saved with Joblib and used by the Streamlit web application.
+
+The application logs predictions to support basic monitoring and traceability. GitHub Actions provides CI/CD automation by installing dependencies, training the model and running tests on each push. Docker provides a reproducible containerized execution environment, while Streamlit Community Cloud provides public cloud access to the application. Terraform is included as the infrastructure-as-code component for future cloud infrastructure expansion.
+
+### Workflow Summary
 
 ```text
 Data generation
@@ -216,7 +252,7 @@ This workflow demonstrates how a Machine Learning model can be transformed into 
 
 ## 9. Software Engineering Practices
 
-The project includes several software engineering practices:
+The project includes several software engineering practices.
 
 ### Version Control
 
@@ -234,6 +270,7 @@ data/
 tests/
 terraform/
 .github/workflows/
+.streamlit/
 ```
 
 ### Testing
@@ -357,7 +394,25 @@ This demonstrates how the project could be moved toward a more advanced cloud de
 
 ---
 
-## 15. Limitations
+## 15. User Interface and Visual Design
+
+The application uses a custom dark interface to create a more professional user experience.
+
+The interface includes:
+
+- a custom sidebar navigation system,
+- dark theme styling,
+- visual cards,
+- interactive Plotly charts,
+- clear metric sections,
+- risk-level feedback cards,
+- a consistent green accent color.
+
+The goal of the design is to make the application look like a real business tool rather than a simple prototype.
+
+---
+
+## 16. Limitations
 
 The main limitations of the project are:
 
@@ -372,7 +427,7 @@ These limitations are acceptable for an academic project, but they should be add
 
 ---
 
-## 16. Future Improvements
+## 17. Future Improvements
 
 Future improvements could include:
 
@@ -389,7 +444,7 @@ Future improvements could include:
 
 ---
 
-## 17. Conclusion
+## 18. Conclusion
 
 FitRetention demonstrates how Machine Learning can be combined with MLOps practices to create a complete web application.
 
@@ -397,6 +452,7 @@ The project goes beyond model training by including:
 
 - a professional web interface,
 - automated model comparison,
+- interactive visual analytics,
 - Docker containerization,
 - CI/CD automation,
 - cloud deployment,
