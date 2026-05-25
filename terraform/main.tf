@@ -1,19 +1,28 @@
 terraform {
   required_version = ">= 1.5.0"
+
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.100"
+    }
+  }
 }
 
-# Basic Terraform placeholder for the cloud deployment stage.
-# In a real production environment, this file could define:
-# - Resource group
-# - Container registry
-# - App service or container app
-# - Networking
-# - Environment variables
-
-output "project_name" {
-  value = "FitRetention"
+provider "azurerm" {
+  features {}
 }
 
-output "description" {
-  value = "MLOps infrastructure placeholder for Streamlit gym churn prediction app"
+# This Terraform configuration is prepared for a future Azure deployment.
+# It defines the base resource group that could host the containerized Streamlit application.
+
+resource "azurerm_resource_group" "fitretention_rg" {
+  name     = var.resource_group_name
+  location = var.location
+
+  tags = {
+    project     = var.project_name
+    environment = var.environment
+    managed_by  = "terraform"
+  }
 }
