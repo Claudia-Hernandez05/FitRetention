@@ -17,6 +17,7 @@ METRICS_PATH = ROOT_DIR / "models" / "model_metrics.pkl"
 LOG_PATH = ROOT_DIR / "logs" / "predictions_log.csv"
 MODEL_COMPARISON_PATH = ROOT_DIR / "models" / "model_comparison.csv"
 BEST_MODEL_NAME_PATH = ROOT_DIR / "models" / "best_model_name.pkl"
+FEATURE_IMPORTANCE_PATH = ROOT_DIR / "models" / "feature_importance.csv"
 
 
 st.set_page_config(
@@ -26,8 +27,197 @@ st.set_page_config(
 )
 
 
-st.sidebar.title("🏋️ FitRetention")
+st.markdown(
+    """
+    <style>
+    .main {
+        background-color: #0E1117;
+    }
+
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
+    }
+
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+    }
+
+    [data-testid="stSidebar"] * {
+        color: #F9FAFB;
+    }
+
+    h1 {
+        font-size: 3rem !important;
+        font-weight: 800 !important;
+        color: #F9FAFB !important;
+    }
+
+    h2, h3 {
+        color: #F9FAFB !important;
+        font-weight: 700 !important;
+    }
+
+    p, li, label, div {
+        color: #E5E7EB;
+    }
+
+    .hero-card {
+        padding: 2rem;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #1F2937 0%, #111827 45%, #064E3B 100%);
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+        font-size: 3.2rem;
+        font-weight: 900;
+        color: white;
+        margin-bottom: 0.3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        color: #D1FAE5;
+        margin-bottom: 1.2rem;
+    }
+
+    .card {
+        padding: 1.4rem;
+        border-radius: 18px;
+        background-color: #111827;
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+        margin-bottom: 1rem;
+    }
+
+    .metric-card {
+        padding: 1.2rem;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+        border: 1px solid rgba(255,255,255,0.08);
+        text-align: center;
+    }
+
+    .metric-title {
+        font-size: 0.95rem;
+        color: #D1FAE5;
+        margin-bottom: 0.3rem;
+    }
+
+    .metric-value {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: white;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.45rem 0.8rem;
+        margin: 0.2rem;
+        border-radius: 999px;
+        background-color: rgba(16,185,129,0.15);
+        color: #6EE7B7;
+        border: 1px solid rgba(110,231,183,0.3);
+        font-weight: 600;
+    }
+
+    .warning-card {
+        padding: 1rem;
+        border-radius: 16px;
+        background-color: rgba(245,158,11,0.12);
+        border: 1px solid rgba(245,158,11,0.35);
+    }
+
+    .success-card {
+        padding: 1rem;
+        border-radius: 16px;
+        background-color: rgba(16,185,129,0.12);
+        border: 1px solid rgba(16,185,129,0.35);
+    }
+
+    .danger-card {
+        padding: 1rem;
+        border-radius: 16px;
+        background-color: rgba(239,68,68,0.12);
+        border: 1px solid rgba(239,68,68,0.35);
+    }
+
+    div[data-testid="stMetric"] {
+        background-color: #111827;
+        padding: 1rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    div[data-testid="stDataFrame"] {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .stButton > button {
+        border-radius: 999px;
+        padding: 0.7rem 1.4rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+        color: white;
+        border: none;
+    }
+
+    .stButton > button:hover {
+        background: linear-gradient(90deg, #059669 0%, #047857 100%);
+        color: white;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+def load_dataset():
+    if DATA_PATH.exists():
+        return pd.read_csv(DATA_PATH)
+    return None
+
+
+def section_header(title, subtitle=None):
+    st.markdown(f"## {title}")
+    if subtitle:
+        st.markdown(f"<p style='color:#9CA3AF; font-size:1.05rem;'>{subtitle}</p>", unsafe_allow_html=True)
+
+
+def custom_metric(title, value):
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-title">{title}</div>
+            <div class="metric-value">{value}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_badges():
+    st.markdown(
+        """
+        <span class="badge">Machine Learning</span>
+        <span class="badge">Streamlit</span>
+        <span class="badge">Docker</span>
+        <span class="badge">GitHub Actions</span>
+        <span class="badge">Terraform</span>
+        <span class="badge">Monitoring</span>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+st.sidebar.markdown("## 🏋️ FitRetention")
 st.sidebar.caption("Gym churn prediction with MLOps")
+st.sidebar.divider()
 
 page = st.sidebar.radio(
     "Navigation",
@@ -41,81 +231,119 @@ page = st.sidebar.radio(
     ],
 )
 
-
-def load_dataset():
-    if DATA_PATH.exists():
-        return pd.read_csv(DATA_PATH)
-    return None
-
-
-def show_project_badges():
-    col1, col2, col3, col4 = st.columns(4)
-    col1.success("ML Model")
-    col2.success("Streamlit App")
-    col3.success("Docker")
-    col4.success("CI/CD")
+st.sidebar.divider()
+st.sidebar.markdown("### Project Stack")
+st.sidebar.markdown(
+    """
+    - Python  
+    - Scikit-learn  
+    - Streamlit  
+    - Docker  
+    - GitHub Actions  
+    - Terraform  
+    """
+)
 
 
 if page == "Home":
-    st.title("🏋️ FitRetention")
-    st.subheader("Professional Gym Member Churn Prediction Platform")
-
     st.markdown(
         """
-        **FitRetention** is a Machine Learning and MLOps web application designed to help gyms
-        identify members who are likely to cancel their membership.
-
-        The application predicts churn risk based on behavioral, subscription and satisfaction
-        variables, then provides a practical retention recommendation.
-        """
+        <div class="hero-card">
+            <div class="hero-title">🏋️ FitRetention</div>
+            <div class="hero-subtitle">Professional Gym Member Churn Prediction Platform</div>
+            <p>
+                FitRetention helps gyms identify members who are likely to cancel their membership.
+                The platform combines Machine Learning and MLOps practices to provide predictions,
+                business recommendations and monitoring capabilities.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-    show_project_badges()
+    render_badges()
 
     st.divider()
 
-    st.header("Business Problem")
-
-    st.markdown(
-        """
-        Gyms often lose members because of low attendance, low satisfaction, lack of engagement
-        or price sensitivity. Detecting high-risk members early allows the business to act before
-        cancellation happens.
-
-        This application supports retention actions such as:
-
-        - contacting inactive members,
-        - offering personalized training plans,
-        - recommending group classes,
-        - giving targeted discounts,
-        - improving customer engagement.
-        """
+    section_header(
+        "Business Problem",
+        "Gyms lose revenue when members cancel their subscriptions. Early detection allows better retention strategies.",
     )
 
-    st.header("Project Value")
+    col1, col2 = st.columns([1.3, 1])
+
+    with col1:
+        st.markdown(
+            """
+            <div class="card">
+                <h3>Why churn prediction matters</h3>
+                <p>
+                    Gym members often leave because of low attendance, low satisfaction, lack of engagement,
+                    high monthly fees or lack of personalized support. By predicting churn risk, the business
+                    can contact members before they cancel.
+                </p>
+                <p>
+                    The goal is not only to predict risk, but also to recommend actions that improve retention.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col2:
+        custom_metric("Use Case", "Churn")
+        custom_metric("Interface", "Web App")
+        custom_metric("Workflow", "MLOps")
+
+    st.divider()
+
+    section_header("What the app provides")
 
     col1, col2, col3 = st.columns(3)
-    col1.metric("Use Case", "Churn Prediction")
-    col2.metric("Interface", "Web App")
-    col3.metric("Workflow", "MLOps")
 
-    st.info(
-        "The project demonstrates the full lifecycle from model training to a dockerized web "
-        "application with testing, CI/CD and infrastructure-as-code preparation."
-    )
+    with col1:
+        st.markdown(
+            """
+            <div class="card">
+                <h3>Prediction</h3>
+                <p>Estimate the probability that a member cancels their membership.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col2:
+        st.markdown(
+            """
+            <div class="card">
+                <h3>Recommendation</h3>
+                <p>Suggest a practical retention action based on the risk level.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col3:
+        st.markdown(
+            """
+            <div class="card">
+                <h3>Monitoring</h3>
+                <p>Store prediction logs to support traceability and future model monitoring.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 elif page == "Prediction":
-    st.title("Predict Gym Member Churn")
-
-    st.markdown(
-        """
-        Enter the details of a gym member. The model will estimate the probability that this member
-        cancels their subscription.
-        """
+    section_header(
+        "Predict Gym Member Churn",
+        "Enter member information and generate a churn risk prediction.",
     )
 
     with st.form("prediction_form"):
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -131,12 +359,11 @@ elif page == "Prediction":
         with col3:
             personal_trainer = st.selectbox("Personal trainer", ["Yes", "No"])
             group_classes = st.selectbox("Group classes", ["Yes", "No"])
-            membership_type = st.selectbox(
-                "Membership type",
-                ["Basic", "Standard", "Premium"],
-            )
+            membership_type = st.selectbox("Membership type", ["Basic", "Standard", "Premium"])
 
         submitted = st.form_submit_button("Predict churn risk")
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
     input_data = {
         "age": age,
@@ -155,59 +382,94 @@ elif page == "Prediction":
         probability = result["probability"]
 
         st.divider()
-        st.subheader("Prediction Result")
+        section_header("Prediction Result")
 
         col1, col2, col3 = st.columns(3)
         col1.metric("Churn probability", f"{probability:.1%}")
         col2.metric("Risk level", result["risk_level"])
-        col3.metric(
-            "Prediction",
-            "Churn" if result["prediction"] == 1 else "No churn",
-        )
+        col3.metric("Prediction", "Churn" if result["prediction"] == 1 else "No churn")
 
         if result["risk_level"] == "Low":
-            st.success("Low churn risk. The member appears to be engaged.")
+            st.markdown(
+                """
+                <div class="success-card">
+                    <h3>Low churn risk</h3>
+                    <p>The member appears to be engaged. Maintain current engagement actions.</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
         elif result["risk_level"] == "Medium":
-            st.warning("Medium churn risk. The member may need additional engagement.")
+            st.markdown(
+                """
+                <div class="warning-card">
+                    <h3>Medium churn risk</h3>
+                    <p>The member may need additional engagement or a personalized offer.</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
         else:
-            st.error("High churn risk. A retention action is recommended.")
+            st.markdown(
+                """
+                <div class="danger-card">
+                    <h3>High churn risk</h3>
+                    <p>A retention action is strongly recommended.</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
         st.info(f"Recommended action: {result['recommendation']}")
 
-        st.markdown("### Input data used for prediction")
+        st.markdown("### Input data")
         st.dataframe(pd.DataFrame([input_data]), use_container_width=True)
 
 
 elif page == "Data Insights":
-    st.title("Data Insights")
+    section_header(
+        "Data Insights",
+        "Explore the generated gym member dataset used for model training.",
+    )
 
     df = load_dataset()
 
     if df is None:
         st.warning("Dataset not found. Please run `python src/train_model.py` first.")
     else:
-        st.markdown("### Dataset Preview")
-        st.dataframe(df.head(20), use_container_width=True)
-
-        st.markdown("### Dataset Overview")
-
         col1, col2, col3 = st.columns(3)
         col1.metric("Rows", df.shape[0])
         col2.metric("Columns", df.shape[1])
         col3.metric("Churn rate", f"{df['churn'].mean():.1%}")
 
+        st.markdown("### Dataset preview")
+        st.dataframe(df.head(20), use_container_width=True)
+
         st.divider()
 
-        st.markdown("### Churn Distribution")
-        churn_counts = df["churn"].value_counts().sort_index()
+        col1, col2 = st.columns(2)
 
-        fig, ax = plt.subplots()
-        ax.bar(["No churn", "Churn"], churn_counts.values)
-        ax.set_ylabel("Number of members")
-        ax.set_title("Churn distribution")
-        st.pyplot(fig)
+        with col1:
+            st.markdown("### Churn distribution")
+            churn_counts = df["churn"].value_counts().sort_index()
 
-        st.markdown("### Average Behavior by Churn Status")
+            fig, ax = plt.subplots()
+            ax.bar(["No churn", "Churn"], churn_counts.values)
+            ax.set_ylabel("Number of members")
+            ax.set_title("Churn distribution")
+            st.pyplot(fig)
+
+        with col2:
+            st.markdown("### Average satisfaction by churn")
+            satisfaction = df.groupby("churn")["satisfaction_score"].mean()
+
+            fig, ax = plt.subplots()
+            ax.bar(["No churn", "Churn"], satisfaction.values)
+            ax.set_ylabel("Average satisfaction")
+            ax.set_title("Satisfaction comparison")
+            st.pyplot(fig)
+
+        st.markdown("### Average behavior by churn status")
 
         summary = df.groupby("churn")[
             [
@@ -221,23 +483,19 @@ elif page == "Data Insights":
 
         st.dataframe(summary, use_container_width=True)
 
-        st.markdown(
-            """
-            These insights help explain the model logic. Members with fewer weekly visits,
-            more days since the last visit and lower satisfaction tend to have a higher churn risk.
-            """
-        )
-
 
 elif page == "Model Performance":
-    st.title("Model Performance")
+    section_header(
+        "Model Performance",
+        "Compare candidate models and review the selected model.",
+    )
 
     if not METRICS_PATH.exists():
         st.warning("Model metrics file not found. Please run `python src/train_model.py` first.")
     else:
         metrics = joblib.load(METRICS_PATH)
 
-        best_model_name = "Random Forest"
+        best_model_name = "Unknown"
         if BEST_MODEL_NAME_PATH.exists():
             best_model_name = joblib.load(BEST_MODEL_NAME_PATH)
 
@@ -251,18 +509,16 @@ elif page == "Model Performance":
 
         st.markdown(
             """
-            The training pipeline evaluates model performance using classification metrics.
-            The F1-score is especially useful because it balances precision and recall.
+            The model training pipeline compares several candidate algorithms and selects
+            the best one using the F1-score.
             """
         )
 
         if MODEL_COMPARISON_PATH.exists():
             comparison_df = pd.read_csv(MODEL_COMPARISON_PATH)
 
-            st.markdown("### Model Comparison")
+            st.markdown("### Model comparison")
             st.dataframe(comparison_df, use_container_width=True)
-
-            st.markdown("### F1-score by Model")
 
             fig, ax = plt.subplots()
             ax.bar(comparison_df["model_name"], comparison_df["f1_score"])
@@ -270,36 +526,27 @@ elif page == "Model Performance":
             ax.set_title("Model comparison by F1-score")
             ax.tick_params(axis="x", rotation=20)
             st.pyplot(fig)
+
+        if FEATURE_IMPORTANCE_PATH.exists():
+            importance_df = pd.read_csv(FEATURE_IMPORTANCE_PATH)
+
+            st.markdown("### Feature importance")
+
+            fig, ax = plt.subplots()
+            top_features = importance_df.head(10)
+            ax.barh(top_features["feature"], top_features["importance"])
+            ax.set_xlabel("Importance")
+            ax.set_title("Top 10 most important features")
+            ax.invert_yaxis()
+            st.pyplot(fig)
         else:
-            st.info(
-                "Model comparison file not found yet. The current app can still use the saved model."
-            )
-
-        st.markdown("### Business Interpretation")
-
-        st.markdown(
-            """
-            The strongest expected churn indicators are:
-
-            - many days since last visit,
-            - low weekly attendance,
-            - low satisfaction score,
-            - high monthly fee,
-            - short membership duration.
-
-            These variables reflect engagement, price sensitivity and customer satisfaction.
-            """
-        )
+            st.info("Feature importance is available when the selected model supports it.")
 
 
 elif page == "Prediction Monitoring":
-    st.title("Prediction Monitoring")
-
-    st.markdown(
-        """
-        This section shows the prediction logs generated by the application.
-        Each prediction is stored to support basic monitoring, traceability and future model auditing.
-        """
+    section_header(
+        "Prediction Monitoring",
+        "Track predictions generated by the application.",
     )
 
     if LOG_PATH.exists():
@@ -307,11 +554,11 @@ elif page == "Prediction Monitoring":
 
         st.metric("Total predictions logged", len(logs))
 
-        st.markdown("### Recent Predictions")
+        st.markdown("### Recent predictions")
         st.dataframe(logs.tail(20), use_container_width=True)
 
         if "risk_level" in logs.columns:
-            st.markdown("### Risk Level Distribution")
+            st.markdown("### Risk level distribution")
 
             risk_counts = logs["risk_level"].value_counts()
 
@@ -325,41 +572,28 @@ elif page == "Prediction Monitoring":
 
 
 elif page == "MLOps Pipeline":
-    st.title("MLOps Pipeline")
+    section_header(
+        "MLOps Pipeline",
+        "Overview of the technical workflow implemented in the project.",
+    )
 
     st.markdown(
         """
-        FitRetention follows a complete academic MLOps workflow:
-
-        ### 1. Data Layer
-        Synthetic gym member data is generated for educational purposes.
-
-        ### 2. Model Training
-        A Scikit-learn model is trained to predict member churn.
-
-        ### 3. Model Persistence
-        The trained model and metrics are stored using Joblib.
-
-        ### 4. Application Layer
-        Streamlit provides an interactive web application.
-
-        ### 5. Testing
-        Pytest validates the prediction function.
-
-        ### 6. CI/CD
-        GitHub Actions automatically installs dependencies, trains the model and runs tests.
-
-        ### 7. Containerization
-        Docker and Docker Compose are used to run the app in a reproducible environment.
-
-        ### 8. Monitoring
-        Prediction logs are stored in a CSV file to support traceability and future monitoring.
-
-        ### 9. Infrastructure as Code
-        Terraform files are included as a starting point for cloud deployment.
-        """
+        <div class="card">
+            <h3>End-to-end workflow</h3>
+            <p><b>1. Data layer:</b> synthetic gym member data generation.</p>
+            <p><b>2. Model training:</b> multiple Scikit-learn models are compared.</p>
+            <p><b>3. Model selection:</b> the best model is selected using F1-score.</p>
+            <p><b>4. Model persistence:</b> the trained model is saved with Joblib.</p>
+            <p><b>5. Application:</b> Streamlit provides the web interface.</p>
+            <p><b>6. Testing:</b> Pytest validates the prediction function.</p>
+            <p><b>7. CI/CD:</b> GitHub Actions runs training and tests automatically.</p>
+            <p><b>8. Containerization:</b> Docker runs the app in a reproducible environment.</p>
+            <p><b>9. Monitoring:</b> predictions are logged for future analysis.</p>
+            <p><b>10. Infrastructure:</b> Terraform prepares the project for cloud deployment.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-    st.success(
-        "The application is prepared for local execution, Docker execution and future cloud deployment."
-    )
+    st.success("The application is ready for local execution, Docker execution and future cloud deployment.")
