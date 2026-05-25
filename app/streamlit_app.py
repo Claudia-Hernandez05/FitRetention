@@ -2,8 +2,8 @@ import sys
 from pathlib import Path
 
 import joblib
-import matplotlib.pyplot as plt
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -264,113 +264,109 @@ def render_badges():
         <span class="badge">GitHub Actions</span>
         <span class="badge">Terraform</span>
         <span class="badge">Monitoring</span>
+        <span class="badge">Cloud Deployment</span>
         """,
         unsafe_allow_html=True,
     )
 
 
-def style_axis(ax, title=None, xlabel=None, ylabel=None):
-    ax.set_facecolor("#111827")
-
-    if title:
-        ax.set_title(
-            title,
-            color="#F9FAFB",
-            fontsize=14,
-            fontweight="bold",
-            pad=14,
-        )
-    if xlabel:
-        ax.set_xlabel(xlabel, color="#D1D5DB", labelpad=10)
-    if ylabel:
-        ax.set_ylabel(ylabel, color="#D1D5DB", labelpad=10)
-
-    ax.tick_params(colors="#D1D5DB", labelsize=10)
-
-    for spine in ax.spines.values():
-        spine.set_color("#374151")
-
-    ax.grid(
-        axis="y",
-        color="#374151",
-        linestyle="--",
-        linewidth=0.6,
-        alpha=0.45,
+def apply_plotly_dark_theme(fig):
+    fig.update_layout(
+        paper_bgcolor="#0E1117",
+        plot_bgcolor="#111827",
+        font=dict(color="#F9FAFB", size=13),
+        title=dict(
+            font=dict(size=18, color="#F9FAFB"),
+            x=0.02,
+        ),
+        xaxis=dict(
+            gridcolor="#374151",
+            zerolinecolor="#374151",
+            linecolor="#374151",
+            tickfont=dict(color="#D1D5DB"),
+            title=dict(font=dict(color="#D1D5DB")),
+        ),
+        yaxis=dict(
+            gridcolor="#374151",
+            zerolinecolor="#374151",
+            linecolor="#374151",
+            tickfont=dict(color="#D1D5DB"),
+            title=dict(font=dict(color="#D1D5DB")),
+        ),
+        margin=dict(l=30, r=30, t=70, b=45),
+        hoverlabel=dict(
+            bgcolor="#111827",
+            font_size=13,
+            font_color="#F9FAFB",
+            bordercolor="#10B981",
+        ),
     )
-
-
-def create_bar_chart(labels, values, title, ylabel):
-    fig, ax = plt.subplots(figsize=(7, 4))
-    fig.patch.set_facecolor("#0E1117")
-    ax.set_facecolor("#111827")
-
-    bars = ax.bar(
-        labels,
-        values,
-        color="#10B981",
-        edgecolor="#6EE7B7",
-        linewidth=1.1,
-    )
-
-    style_axis(ax, title=title, ylabel=ylabel)
-
-    max_value = max(values) if len(values) > 0 else 1
-
-    for bar in bars:
-        height = bar.get_height()
-        label = f"{height:.3f}" if isinstance(height, float) and height < 1 else f"{height:.2f}"
-        if height >= 1:
-            label = f"{int(height)}" if float(height).is_integer() else f"{height:.2f}"
-
-        ax.text(
-            bar.get_x() + bar.get_width() / 2,
-            height + max_value * 0.02,
-            label,
-            ha="center",
-            va="bottom",
-            color="#F9FAFB",
-            fontsize=10,
-            fontweight="bold",
-        )
-
-    ax.set_ylim(0, max_value * 1.18 if max_value > 0 else 1)
-    fig.tight_layout()
     return fig
 
 
-def create_horizontal_bar_chart(labels, values, title, xlabel):
-    fig, ax = plt.subplots(figsize=(8, 4.6))
-    fig.patch.set_facecolor("#0E1117")
-    ax.set_facecolor("#111827")
-
-    bars = ax.barh(
-        labels,
-        values,
-        color="#10B981",
-        edgecolor="#6EE7B7",
-        linewidth=1.1,
+def plotly_bar_chart(data, x, y, title, labels=None):
+    fig = px.bar(
+        data,
+        x=x,
+        y=y,
+        title=title,
+        text=y,
+        labels=labels,
+        color_discrete_sequence=["#10B981"],
     )
 
-    style_axis(ax, title=title, xlabel=xlabel)
-    ax.invert_yaxis()
+    fig.update_traces(
+        texttemplate="%{text}",
+        textposition="outside",
+        marker_line_color="#6EE7B7",
+        marker_line_width=1.2,
+        hovertemplate="<b>%{x}</b><br>%{y}<extra></extra>",
+    )
 
-    max_value = max(values) if len(values) > 0 else 1
+    fig = apply_plotly_dark_theme(fig)
 
-    for bar in bars:
-        width = bar.get_width()
-        ax.text(
-            width + max_value * 0.02,
-            bar.get_y() + bar.get_height() / 2,
-            f"{width:.3f}",
-            va="center",
-            ha="left",
-            color="#F9FAFB",
-            fontsize=9,
-            fontweight="bold",
-        )
+    fig.update_layout(
+        bargap=0.35,
+        showlegend=False,
+    )
 
-    ax.set_xlim(0, max_value * 1.20 if max_value > 0 else 1)
-    fig.tight_layout()
+    return fig
+
+
+def plotly_horizontal_bar_chart(data, x, y, title, labels=None):
+    fig = px.bar(
+        data,
+        x=x,
+        y=y,
+        orientation="h",
+        title=title,
+        text=x,
+        labels=labels,
+        color_discrete_sequence=["#10B981"],
+    )
+
+    fig.update_traces(
+        texttemplate="%{text:.3f}",
+        textposition="outside",
+        marker_line_color="#6EE7B7",
+        marker_line_width=1.2,
+        hovertemplate="<b>%{y}</b><br>%{x:.4f}<extra></extra>",
+    )
+
+    fig = apply_plotly_dark_theme(fig)
+
+    fig.update_layout(
+        yaxis=dict(
+            categoryorder="total ascending",
+            gridcolor="#374151",
+            zerolinecolor="#374151",
+            linecolor="#374151",
+            tickfont=dict(color="#D1D5DB"),
+            title=dict(font=dict(color="#D1D5DB")),
+        ),
+        showlegend=False,
+    )
+
     return fig
 
 
@@ -417,9 +413,11 @@ st.sidebar.markdown(
     - Python  
     - Scikit-learn  
     - Streamlit  
+    - Plotly  
     - Docker  
     - GitHub Actions  
     - Terraform  
+    - Streamlit Cloud  
     """
 )
 
@@ -635,25 +633,49 @@ elif page == "Data Insights":
             st.markdown("### Churn distribution")
             churn_counts = df["churn"].value_counts().sort_index()
 
-            fig = create_bar_chart(
-                ["No churn", "Churn"],
-                churn_counts.values,
-                "Churn distribution",
-                "Number of members",
+            churn_chart_df = pd.DataFrame(
+                {
+                    "Status": ["No churn", "Churn"],
+                    "Members": churn_counts.values,
+                }
             )
-            st.pyplot(fig, transparent=True)
+
+            fig = plotly_bar_chart(
+                churn_chart_df,
+                x="Status",
+                y="Members",
+                title="Churn distribution",
+                labels={
+                    "Status": "Churn status",
+                    "Members": "Number of members",
+                },
+            )
+
+            st.plotly_chart(fig, use_container_width=True)
 
         with col2:
             st.markdown("### Average satisfaction by churn")
             satisfaction = df.groupby("churn")["satisfaction_score"].mean()
 
-            fig = create_bar_chart(
-                ["No churn", "Churn"],
-                satisfaction.values,
-                "Average satisfaction by churn",
-                "Average satisfaction",
+            satisfaction_chart_df = pd.DataFrame(
+                {
+                    "Status": ["No churn", "Churn"],
+                    "Average satisfaction": satisfaction.values,
+                }
             )
-            st.pyplot(fig, transparent=True)
+
+            fig = plotly_bar_chart(
+                satisfaction_chart_df,
+                x="Status",
+                y="Average satisfaction",
+                title="Average satisfaction by churn",
+                labels={
+                    "Status": "Churn status",
+                    "Average satisfaction": "Average satisfaction",
+                },
+            )
+
+            st.plotly_chart(fig, use_container_width=True)
 
         st.markdown("### Average behavior by churn status")
 
@@ -706,13 +728,18 @@ elif page == "Model Performance":
             st.markdown("### Model comparison")
             st.dataframe(comparison_df, use_container_width=True)
 
-            fig = create_bar_chart(
-                comparison_df["model_name"],
-                comparison_df["f1_score"],
-                "Model comparison by F1-score",
-                "F1-score",
+            fig = plotly_bar_chart(
+                comparison_df,
+                x="model_name",
+                y="f1_score",
+                title="Model comparison by F1-score",
+                labels={
+                    "model_name": "Model",
+                    "f1_score": "F1-score",
+                },
             )
-            st.pyplot(fig, transparent=True)
+
+            st.plotly_chart(fig, use_container_width=True)
 
         if FEATURE_IMPORTANCE_PATH.exists():
             importance_df = pd.read_csv(FEATURE_IMPORTANCE_PATH)
@@ -720,13 +747,18 @@ elif page == "Model Performance":
             st.markdown("### Feature importance")
             top_features = importance_df.head(10)
 
-            fig = create_horizontal_bar_chart(
-                top_features["feature"],
-                top_features["importance"],
-                "Top 10 most important features",
-                "Importance",
+            fig = plotly_horizontal_bar_chart(
+                top_features,
+                x="importance",
+                y="feature",
+                title="Top 10 most important features",
+                labels={
+                    "importance": "Importance",
+                    "feature": "Feature",
+                },
             )
-            st.pyplot(fig, transparent=True)
+
+            st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("Feature importance is available when the selected model supports it.")
 
@@ -749,13 +781,25 @@ elif page == "Prediction Monitoring":
             st.markdown("### Risk level distribution")
             risk_counts = logs["risk_level"].value_counts()
 
-            fig = create_bar_chart(
-                risk_counts.index,
-                risk_counts.values,
-                "Logged risk levels",
-                "Number of predictions",
+            risk_chart_df = pd.DataFrame(
+                {
+                    "Risk level": risk_counts.index,
+                    "Predictions": risk_counts.values,
+                }
             )
-            st.pyplot(fig, transparent=True)
+
+            fig = plotly_bar_chart(
+                risk_chart_df,
+                x="Risk level",
+                y="Predictions",
+                title="Logged risk levels",
+                labels={
+                    "Risk level": "Risk level",
+                    "Predictions": "Number of predictions",
+                },
+            )
+
+            st.plotly_chart(fig, use_container_width=True)
     else:
         st.info("No predictions have been logged yet. Go to the Prediction page and make a prediction.")
 
@@ -779,12 +823,13 @@ elif page == "MLOps Pipeline":
             <p><b>7. CI/CD:</b> GitHub Actions runs training and tests automatically.</p>
             <p><b>8. Containerization:</b> Docker runs the app in a reproducible environment.</p>
             <p><b>9. Monitoring:</b> predictions are logged for future analysis.</p>
-            <p><b>10. Infrastructure:</b> Terraform prepares the project for cloud deployment.</p>
+            <p><b>10. Cloud deployment:</b> the app is deployed with Streamlit Community Cloud.</p>
+            <p><b>11. Infrastructure:</b> Terraform prepares the project for cloud deployment.</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
     st.success(
-        "The application is ready for local execution, Docker execution and future cloud deployment."
+        "The application is ready for local execution, Docker execution and cloud access."
     )
