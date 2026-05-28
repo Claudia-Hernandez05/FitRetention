@@ -1,0 +1,2 @@
+age,membership_months,weekly_visits,days_since_last_visit,monthly_fee,satisfaction_score,personal_trainer,group_classes,membership_type,timestamp,churn_probability,prediction,risk_level,recommended_action
+30,12,2,10,50,5,No,No,Basic,2026-05-28 21:51:08,,1,Medium,
