@@ -2,9 +2,9 @@
 
 **FitRetention** is a Machine Learning and MLOps web application designed to predict gym member churn.
 
-The goal of the project is to help a fitness center identify members who are likely to cancel their membership and recommend retention actions before churn happens.
+The application helps gym managers and retention teams identify members who are likely to cancel their membership and take preventive actions before churn happens.
 
-The deployed application is available here:
+The deployed application is available at:
 
 ```text
 https://fitretention-gym-churn.streamlit.app
@@ -14,14 +14,14 @@ https://fitretention-gym-churn.streamlit.app
 
 ## Project Overview
 
-FitRetention transforms a Machine Learning model into a usable web application through an end-to-end MLOps workflow.
+FitRetention transforms a Machine Learning model into a professional web application through an end-to-end MLOps workflow.
 
-The project includes:
+The project combines:
 
 - Machine Learning model training
 - Automatic model comparison and model selection
 - Streamlit web application
-- Professional user interface
+- Interactive data visualizations with Plotly
 - Prediction logging for basic monitoring
 - Automated testing with Pytest
 - CI/CD with GitHub Actions
@@ -30,9 +30,13 @@ The project includes:
 - Cloud deployment with Streamlit Community Cloud
 - Terraform infrastructure-as-code preparation
 
+The main goal is not only to train a model, but also to demonstrate how a Machine Learning solution can be packaged, tested, deployed and monitored as part of a complete MLOps pipeline.
+
 ---
 
 ## Business Problem
+
+Customer churn is an important business problem for gyms and fitness centers.
 
 Gyms often lose members because of:
 
@@ -41,22 +45,25 @@ Gyms often lose members because of:
 - Lack of engagement
 - High monthly fees
 - Long periods without visiting the gym
+- Lack of personalized support
 
 By predicting churn risk early, a gym can take preventive actions such as contacting inactive members, offering personalized plans, recommending group classes or providing targeted discounts.
+
+FitRetention is designed as a decision-support tool for gym managers. The members are the analyzed customers, while the application is used by the business to support retention decisions.
 
 ---
 
 ## Application Features
 
-The Streamlit application includes the following sections:
+The Streamlit application is organized into several sections.
 
 ### Home
 
-General explanation of the business problem, project value and technology stack.
+The home page introduces the business problem, project value and technology stack.
 
 ### Prediction
 
-A form where the user enters gym member information and receives:
+The prediction page allows the user to enter information about a gym member and receive:
 
 - Churn probability
 - Risk level: Low, Medium or High
@@ -65,18 +72,20 @@ A form where the user enters gym member information and receives:
 
 ### Data Insights
 
-Dataset exploration, including:
+The data insights page provides an overview of the dataset, including:
 
 - Dataset preview
 - Number of rows and columns
 - Churn rate
-- Churn distribution chart
+- Churn distribution
 - Average satisfaction by churn status
 - Average behavior comparison
 
+The charts are interactive and built with Plotly.
+
 ### Model Performance
 
-Model evaluation section showing:
+The model performance page shows:
 
 - Selected best model
 - Accuracy
@@ -84,28 +93,43 @@ Model evaluation section showing:
 - Recall
 - F1-score
 - Model comparison table
-- F1-score comparison chart
+- Interactive F1-score comparison chart
 - Feature importance when available
 
 ### Prediction Monitoring
 
-Basic monitoring section that logs predictions made through the application.
+The prediction monitoring page stores and displays predictions made through the application.
 
-Each prediction stores:
+Each prediction includes:
 
 - Timestamp
-- Input data
+- Input values
 - Churn probability
 - Risk level
 - Recommended action
 
+This provides a basic monitoring and traceability mechanism.
+
 ### MLOps Pipeline
 
-Explanation of the technical MLOps workflow implemented in the project.
+The MLOps pipeline page explains the technical workflow implemented in the project, including model training, testing, CI/CD, Docker, cloud deployment and infrastructure-as-code preparation.
 
 ---
 
 ## Machine Learning Approach
+
+The project treats churn prediction as a binary classification problem.
+
+The target variable is:
+
+```text
+churn
+```
+
+where:
+
+- `0` means the member is not expected to churn
+- `1` means the member is expected to churn
 
 The project trains and compares multiple classification models:
 
@@ -113,7 +137,14 @@ The project trains and compares multiple classification models:
 - Random Forest
 - Gradient Boosting
 
-The best model is selected automatically based on the **F1-score**, because this metric balances precision and recall.
+The best model is selected automatically based on the **F1-score**.
+
+The F1-score is used because churn prediction requires balancing:
+
+- **Precision**: how many predicted churn cases are actually churn
+- **Recall**: how many real churn cases are correctly detected
+
+This is important because failing to detect a high-risk member may result in a lost customer, while incorrectly flagging a member may lead to unnecessary retention actions.
 
 The final trained model is saved with Joblib and used by the Streamlit application for real-time predictions.
 
@@ -125,18 +156,20 @@ For this academic project, the dataset is synthetically generated to simulate re
 
 The dataset includes:
 
-- Age
-- Membership duration in months
-- Weekly visits
-- Days since last visit
-- Monthly fee
-- Satisfaction score
-- Personal trainer usage
-- Group class participation
-- Membership type
-- Churn label
+| Feature | Description |
+|---|---|
+| age | Age of the gym member |
+| membership_months | Number of months since the member joined |
+| weekly_visits | Average number of weekly gym visits |
+| days_since_last_visit | Number of days since the last visit |
+| monthly_fee | Monthly membership fee |
+| satisfaction_score | Satisfaction level from 1 to 10 |
+| personal_trainer | Whether the member uses a personal trainer |
+| group_classes | Whether the member attends group classes |
+| membership_type | Type of membership |
+| churn | Target variable indicating cancellation |
 
-Synthetic data is used because real gym membership data is usually private and may be protected by data protection regulations.
+Synthetic data is used because real gym membership data may contain sensitive personal information and is usually protected by privacy regulations.
 
 ---
 
@@ -163,13 +196,18 @@ FitRetention/
 ├── tests/
 │   └── test_prediction.py
 ├── terraform/
-│   └── main.tf
+│   ├── main.tf
+│   ├── variables.tf
+│   └── outputs.tf
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
+├── .streamlit/
+│   └── config.toml
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
+├── PROJECT_REPORT.md
 └── README.md
 ```
 
@@ -209,7 +247,7 @@ python src/train_model.py
 streamlit run app/streamlit_app.py
 ```
 
-The app will be available at:
+The application will be available at:
 
 ```text
 http://localhost:8501
@@ -265,7 +303,7 @@ The project includes a GitHub Actions workflow located in:
 .github/workflows/ci.yml
 ```
 
-The workflow runs automatically on each push or pull request to the main branch.
+The workflow runs automatically on each push or pull request to the `main` branch.
 
 It performs the following steps:
 
@@ -293,23 +331,29 @@ The Dockerfile:
 - Trains the model
 - Starts the Streamlit application
 
+This demonstrates that the application can be packaged and executed consistently across different environments.
+
 ---
 
 ## Terraform
 
-The project includes a basic Terraform configuration in:
+The project includes Terraform configuration files in:
 
 ```text
-terraform/main.tf
+terraform/
 ```
 
-This file represents the infrastructure-as-code stage of the MLOps workflow.
+Terraform is used as the infrastructure-as-code component of the project.
 
-It can be extended to deploy the application to cloud platforms such as:
+The current configuration defines a structured base for future cloud infrastructure deployment and can be extended to provision resources such as:
 
-- Microsoft Azure
-- AWS
-- Google Cloud Platform
+- Azure resource groups
+- Container registries
+- App services
+- Storage accounts
+- Monitoring resources
+
+This demonstrates how the application could be moved toward a more advanced production cloud deployment.
 
 ---
 
@@ -331,33 +375,25 @@ The project demonstrates the following MLOps lifecycle:
 12. Cloud deployment
 13. Infrastructure-as-code preparation
 
+This workflow shows how a Machine Learning model can be transformed into a usable, reproducible and deployable application.
+
 ---
 
-## Current Status
+## Requirements Coverage
 
-Completed:
-
-- Machine Learning model
-- Automatic model comparison
-- Streamlit web application
-- Professional UI
-- Prediction logging
-- Pytest tests
-- GitHub Actions CI pipeline
-- Dockerfile
-- Docker Compose
-- Cloud deployment
-- Terraform placeholder
-- GitHub repository documentation
-
-Pending / Future improvements:
-
-- Authentication
-- Real production dataset
-- Advanced monitoring
-- Model drift detection
-- Scheduled retraining
-- Full production deployment with Azure resources
+| Requirement | Implementation in FitRetention |
+|---|---|
+| Machine Learning model | Churn prediction model trained with Scikit-learn |
+| Web application | Interactive Streamlit application |
+| Model evaluation | Accuracy, precision, recall and F1-score |
+| Model comparison | Logistic Regression, Random Forest and Gradient Boosting |
+| Automated testing | Pytest test suite |
+| CI/CD | GitHub Actions workflow |
+| Containerization | Dockerfile and Docker Compose |
+| Cloud deployment | Streamlit Community Cloud |
+| Infrastructure as Code | Terraform configuration |
+| Monitoring | Prediction logging and monitoring page |
+| Documentation | README and PROJECT_REPORT.md |
 
 ---
 
@@ -365,10 +401,47 @@ Pending / Future improvements:
 
 This project uses synthetic data for academic purposes. In a real production scenario, the model should be trained with real gym membership data and monitored continuously after deployment.
 
+The current monitoring system is based on prediction logs. In a production environment, this could be extended with advanced monitoring dashboards, model drift detection, data drift detection and automated retraining.
+
 The predictions should be used as decision support, not as the only basis for business decisions.
 
 ---
 
+## Future Work
+
+Possible future improvements include:
+
+- Training the model with real gym membership data
+- Adding user authentication
+- Storing prediction logs in a database
+- Adding advanced monitoring dashboards
+- Implementing model drift detection
+- Implementing scheduled retraining
+- Adding explainability tools such as SHAP
+- Deploying the Docker container to a cloud platform such as Azure
+- Expanding the Terraform configuration for full cloud infrastructure deployment
+
+---
+
+## Additional Documentation
+
+A detailed technical report is available in:
+
+```text
+PROJECT_REPORT.md
+```
+
+This report explains the business context, Machine Learning methodology, MLOps workflow, system architecture, Docker setup, CI/CD pipeline, cloud deployment and limitations of the project.
+
+---
+
 ## Authors
+
+
+- Claudia Hernández Miranda
+- Carlos Ortega Bernardos
+- Michael Bellido
+
+
 
 Developed as part of a Machine Learning Operations course project.
